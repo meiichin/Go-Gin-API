@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"goginapi/handler"
 	"goginapi/user"
 	"log"
@@ -21,6 +22,14 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
+
+	userByEmail, err := userRepository.FindByEmail("coco@gmail.comm")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(userByEmail)
+
+	return
 
 	userHandler := handler.NewUserHandler(userService)
 
