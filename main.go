@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"goginapi/handler"
 	"goginapi/user"
 	"log"
@@ -22,25 +21,13 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-
-	userInput := user.LoginInput{
-		Email:    "coco@gmail.com",
-		Password: "password",
-	}
-	userByEmail, err := userService.Login(userInput)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(userByEmail)
-
-	return
-
 	userHandler := handler.NewUserHandler(userService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
 
 	api.POST("users", userHandler.RegisterUser)
+	api.POST("sessions", userHandler.Login)
 
 	router.Run()
 
