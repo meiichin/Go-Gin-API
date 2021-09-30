@@ -23,7 +23,11 @@ func main() {
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 
-	userByEmail, err := userRepository.FindByEmail("coco@gmail.comm")
+	userInput := user.LoginInput{
+		Email:    "coco@gmail.com",
+		Password: "password",
+	}
+	userByEmail, err := userService.Login(userInput)
 	if err != nil {
 		fmt.Println(err)
 	}
