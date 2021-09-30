@@ -62,6 +62,7 @@ func (s *service) Login(input LoginInput) (User, error) {
 
 	return user, nil
 }
+
 func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
 	email := input.Email
 
@@ -70,9 +71,9 @@ func (s *service) IsEmailAvailable(input CheckEmailInput) (bool, error) {
 		return false, err
 	}
 
-	if user.ID != 0 {
-		return false, errors.New("Email already used")
+	if user.ID == 0 {
+		return true, nil
 	}
 
-	return true, nil
+	return false, nil
 }
