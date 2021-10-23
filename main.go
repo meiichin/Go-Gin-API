@@ -2,6 +2,7 @@ package main
 
 import (
 	"goginapi/auth"
+	"goginapi/campaign"
 	"goginapi/handler"
 	"goginapi/helper"
 	"goginapi/user"
@@ -25,20 +26,10 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
+	campaignRepository := campaign.NewRepository(db)
+
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
-
-	// token, err := authService.ValidateToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1fQ.5zEqrkZDgdBmpuVxCkikr-QBdtSi-jCx8Fl141HNeAM")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// if token.Valid {
-	// 	fmt.Println("valid")
-	// } else {
-	// 	fmt.Println(token)
-	// }
-
-	// return
 	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
