@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"goginapi/auth"
 	"goginapi/campaign"
 	"goginapi/handler"
@@ -30,6 +31,12 @@ func main() {
 
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
+	campaignService := campaign.NewService(campaignRepository)
+
+	campaigns, _ := campaignService.FindCampaigns(4)
+	fmt.Println(len(campaigns))
+	return
+
 	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()
