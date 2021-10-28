@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"goginapi/auth"
 	"goginapi/campaign"
 	"goginapi/handler"
@@ -33,11 +32,8 @@ func main() {
 	authService := auth.NewService()
 	campaignService := campaign.NewService(campaignRepository)
 
-	campaigns, _ := campaignService.FindCampaigns(4)
-	fmt.Println(len(campaigns))
-	return
-
 	userHandler := handler.NewUserHandler(userService, authService)
+	campaignHandler := handler.NewCampaignHanler(campaignService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
@@ -46,6 +42,7 @@ func main() {
 	api.POST("sessions", userHandler.Login)
 	api.POST("email-checkers", userHandler.CheckEmailAvailibbility)
 	api.POST("avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.GET("campaings", campaignHandler.GetCampaigns)
 
 	router.Run()
 }
