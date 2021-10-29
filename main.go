@@ -43,8 +43,10 @@ func main() {
 	api.POST("sessions", userHandler.Login)
 	api.POST("email-checkers", userHandler.CheckEmailAvailibbility)
 	api.POST("avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+
 	api.GET("campaings", campaignHandler.GetCampaigns)
 	api.GET("campaing/:id", campaignHandler.GetCampaign)
+	api.POST("campaings", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 
 	router.Run()
 }
