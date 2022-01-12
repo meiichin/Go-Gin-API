@@ -5,6 +5,8 @@ import (
 	"goginapi/campaign"
 	"goginapi/handler"
 	"goginapi/helper"
+	"goginapi/payment"
+	"goginapi/transaction"
 	"goginapi/user"
 	"log"
 	"net/http"
@@ -27,13 +29,17 @@ func main() {
 
 	userRepository := user.NewRepository(db)
 	campaignRepository := campaign.NewRepository(db)
+	transactionRepository := transaction.NewRepository(db)
 
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 	campaignService := campaign.NewService(campaignRepository)
+	paymentService := payment.NewService()
+	transactionService := transaction.NewService(transactionRepository, paymentService, campaignRepository)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHanler(campaignService)
+	transactionHandler := handler.NewTransactionHanler(transactionService, paymentService)
 
 	router := gin.Default()
 	router.Static("images", "./images")
@@ -49,6 +55,7 @@ func main() {
 	api.POST("campaing", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 	api.PUT("campaing/:id", authMiddleware(authService, userService), campaignHandler.UpdateCampaign)
 	api.POST("campaing-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
+	api.POST("create-campaign", authMiddleware(authService, userService), transactionHandler.CreateTransaction)
 
 	router.Run()
 }
